@@ -14,7 +14,7 @@ namespace LegalMindPersistence
     public class Program
     {
         private static IList<BsonDocument> documents = new List<BsonDocument>();
-        private static readonly string BASE_DIR = @"C:\sandbox\Java\LegalMindTagSoupProcessor\";
+        private static readonly string BASE_DIR = @"C:\sandbox\Java2\LegalMindTagSoupProcessor\";
         private static void ProcessAct()
         {
             string[] subdirectoryEntries = Directory.GetDirectories(BASE_DIR);
@@ -40,14 +40,15 @@ namespace LegalMindPersistence
         {
             if (file.Contains("_TIDY.html"))
             {
-                var actName = file.Split(new string[] { "." }, StringSplitOptions.RemoveEmptyEntries)[0].Split(new string[] { @"\" },StringSplitOptions.RemoveEmptyEntries)[5].Replace("_TIDY","");
+                var  fp  = file.Split(new char[] { '\\'});
+                var actName  = fp[fp.Length - 1].ToString().Replace("_TIDY.html",string.Empty);                
+
                 var doc = new HtmlDocument();
                 doc.Load(file);
                 var node = doc.DocumentNode.SelectSingleNode("//body");
                 var content = node.InnerHtml;
                 var act  = new JsonAct(actName, content);
                 SerializeContent(act);
-                //SaveAct(actName, content);
             }
         }
 
@@ -55,8 +56,7 @@ namespace LegalMindPersistence
         {
             var json = JsonConvert.SerializeObject(item);
             var document = BsonSerializer.Deserialize<BsonDocument>(json);
-            documents.Add(document);
-            //DbFacade.Save(document);          
+            documents.Add(document);        
         }
 
         static void Main(string[] args)
@@ -103,52 +103,6 @@ namespace LegalMindPersistence
             //SaveSection(actName, div.OuterHtml, sectionTitle, actParts.sectionNo);
             var s = new JsonSection(actParts.sectionNo, actName, sectionTitle, div.OuterHtml);
             SerializeContent(s);
-        }
-        private static void SaveAct(string actName, string content)
-        {
-            string insertStatement = $"INSERT Act (ActName,HtmlContent) VALUES (@colParam1, @colParam2)";
-            SqlCommand insertCommand = new SqlCommand
-            {
-                CommandType = CommandType.Text,
-                CommandText = insertStatement
-            };
-
-            insertCommand.Parameters.AddWithValue("@colParam1", actName);
-            insertCommand.Parameters.AddWithValue("@colParam2", content);
-            using (SqlConnection sqlConnection1 =
-        new SqlConnection(@"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=LegalMind;Data Source=.\sqlexpress"))
-            {
-                insertCommand.Connection = sqlConnection1;
-                sqlConnection1.Open();
-                insertCommand.ExecuteNonQuery();
-                Console.WriteLine($"Saved {actName}");
-            }
-        }
-
-        private static void SaveSection(string actName, string sectionContent, string sectionTitle, string sectionNo)
-        {
-            string insertStatement = $"INSERT Section (ActName,SectionContent, SectionTitle,SectionNo) VALUES (@colParam1, @colParam2, @colParam3, @colParam4)";
-            SqlCommand insertCommand = new SqlCommand
-            {
-                CommandType = CommandType.Text,
-                CommandText = insertStatement
-                
-            };
-
-            insertCommand.Parameters.AddWithValue("@colParam1", actName);
-            insertCommand.Parameters.AddWithValue("@colParam2", sectionContent);
-            insertCommand.Parameters.AddWithValue("@colParam3", sectionTitle);
-            insertCommand.Parameters.AddWithValue("@colParam4", sectionNo);
-            using (SqlConnection sqlConnection1 =
-        new SqlConnection(@"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=LegalMind;Data Source=.\sqlexpress"))
-            {
-
-                insertCommand.Connection = sqlConnection1;
-
-                sqlConnection1.Open();
-                insertCommand.ExecuteNonQuery();
-                Console.WriteLine($"Saved {actName}");
-            }
-        }
+        }            
     }
 }

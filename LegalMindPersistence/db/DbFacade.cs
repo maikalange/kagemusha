@@ -26,7 +26,7 @@ namespace LegalMindPersistence.db
 
             if (dbClient==null&&collection==null)
             {
-                dbClient = new MongoClient("mongodb+srv://nyirenda:76upJrcHFGAqwzlp@cluster0.rugxi.mongodb.net/test?authSource=admin&replicaSet=atlas-35ztlv-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true");
+                dbClient = new MongoClient("mongodb+srv://admin:jQqgFKhndXnj6pBw@cluster0.zcfqxa0.mongodb.net/?retryWrites=true&w=majority");
                 var database = dbClient.GetDatabase("legalmind");
                 collection = database.GetCollection<BsonDocument>("legislationgradeA");
                 
