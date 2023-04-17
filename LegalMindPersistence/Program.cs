@@ -5,6 +5,7 @@ using MongoDB.Bson.Serialization;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
@@ -14,7 +15,7 @@ namespace LegalMindPersistence
     public class Program
     {
         private static IList<BsonDocument> documents = new List<BsonDocument>();
-        private static readonly string BASE_DIR = @"C:\sandbox\Java2\LegalMindTagSoupProcessor\";
+        private static readonly string BASE_DIR = ConfigurationManager.AppSettings["doc.path"] ;
         private static void ProcessAct()
         {
             string[] subdirectoryEntries = Directory.GetDirectories(BASE_DIR);

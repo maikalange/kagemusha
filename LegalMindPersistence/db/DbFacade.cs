@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Collections.Generic;
+using System.Configuration;
 
 namespace LegalMindPersistence.db
 {
@@ -26,7 +27,7 @@ namespace LegalMindPersistence.db
 
             if (dbClient==null&&collection==null)
             {
-                dbClient = new MongoClient("mongodb+srv://admin:jQqgFKhndXnj6pBw@cluster0.zcfqxa0.mongodb.net/?retryWrites=true&w=majority");
+                dbClient = new MongoClient(ConfigurationManager.AppSettings["db.connection"]);
                 var database = dbClient.GetDatabase("legalmind");
                 collection = database.GetCollection<BsonDocument>("legislationgradeA");
                 
