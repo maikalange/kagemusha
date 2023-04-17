@@ -15,7 +15,7 @@ namespace LegalMindPersistence
     public class Program
     {
         private static IList<BsonDocument> documents = new List<BsonDocument>();
-        private static readonly string BASE_DIR = ConfigurationManager.AppSettings["doc.path"] ;
+        private static readonly string BASE_DIR = Environment.GetEnvironmentVariable("docPath") ;
         private static void ProcessAct()
         {
             string[] subdirectoryEntries = Directory.GetDirectories(BASE_DIR);
