@@ -26,7 +26,7 @@ namespace LegalMindOCR
         private static void ProcessPrincipleAct()
         {
             IList<BsonDocument> docs = new List<BsonDocument>();
-            string[] fileEntries = Directory.GetFiles(@"C:\Users\JoeNyirenda\Documents\Laws Zambia\", "*.html");
+            string[] fileEntries = Directory.GetFiles(Environment.GetEnvironmentVariable(""), "*.html");
             foreach (var f in fileEntries)
             {
                 MainActGenerator actGenerator = new MainActGenerator(f);
@@ -57,105 +57,9 @@ namespace LegalMindOCR
 
         static void Main()
         {
-            // try
-            {
-                ProcessPrincipleAct();
-                //ExtractAllText(@"C:\Sandbox\legalminds\pdfs\");
-                //ExtractAllText(@"C:\Users\jnj\Documents\NetBeansProjects\LegalMindScraper\Judgements\B\");
-                //ExtractAllText(@"C:\Users\jnj\Documents\NetBeansProjects\LegalMindScraper\Judgements\A\");
-
-                //Parallel.Invoke(
-                //   () => ExtractAllText(@"C:\Sandbox\legalminds\pdfs\")
-                //    () => ExtractAllText(@"C:\Users\jnj\Documents\NetBeansProjects\LegalMindScraper\Judgements\B\"),
-                //    () => ExtractAllText(@"C:\Users\jnj\Documents\NetBeansProjects\LegalMindScraper\Judgements\A\")
-                //   );
-            }
-            //catch (Exception e)
-            //{
-            //    Console.WriteLine(e.Message);
-            //}
+            ProcessPrincipleAct();            
             Console.ReadKey();
         }
-
-
-        private static void InsertPrincipalActDb(string fileName, string content)
-        {
-
-            string queryString = $"INSERT MainActs (FileName, Details) VALUES (@colParam1, @colParam2)";
-
-            SqlCommand insertCommand = new SqlCommand
-            {
-                CommandType = CommandType.Text,
-                CommandText = queryString
-            };
-
-            insertCommand.Parameters.AddWithValue("@colParam1", fileName);
-            insertCommand.Parameters.AddWithValue("@colParam2", content);
-            using (SqlConnection sqlConnection1 =
-    new SqlConnection(@"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=LegalMind;Data Source=.\sqlexpress"))
-            {
-
-                insertCommand.Connection = sqlConnection1;
-
-                sqlConnection1.Open();
-                insertCommand.ExecuteNonQuery();
-                Console.WriteLine($"Saved {fileName}");
-            }
-        }
-
-
-        private static void InsertJudgement(string fileName, string content)
-        {
-
-            string queryString = $"INSERT Judgements (FileName, Details) VALUES (@colParam1, @colParam2)";
-
-            SqlCommand insertCommand = new SqlCommand
-            {
-                CommandType = CommandType.Text,
-                CommandText = queryString
-            };
-
-            //        insertCommand.Parameters.AddWithValue("@colParam1", fileName);
-            //        insertCommand.Parameters.AddWithValue("@colParam2", content);
-            //        using (SqlConnection sqlConnection1 =
-            //new SqlConnection(@"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=LegalMind;Data Source=.\sqlexpress"))
-            //        {
-
-            //            insertCommand.Connection = sqlConnection1;
-
-            //            sqlConnection1.Open();
-            //            insertCommand.ExecuteNonQuery();
-            Console.WriteLine($"Saved {content}");
-            // }
-        }
-
-
-        private static void InsertAct(string fileName, string content)
-        {
-
-            string queryString = $"INSERT Act (ActName, HtmlContent) VALUES (@colParam1, @colParam2)";
-
-            SqlCommand insertCommand = new SqlCommand
-            {
-                CommandType = CommandType.Text,
-                CommandText = queryString
-            };
-
-            insertCommand.Parameters.AddWithValue("@colParam1", fileName);
-            insertCommand.Parameters.AddWithValue("@colParam2", content);
-            using (SqlConnection sqlConnection1 =
-    new SqlConnection(@"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=LegalMind;Data Source=.\sqlexpress"))
-            {
-
-                insertCommand.Connection = sqlConnection1;
-
-                sqlConnection1.Open();
-                insertCommand.ExecuteNonQuery();
-                Console.WriteLine($"Saved {fileName}");
-            }
-        }
-
-
 
         private static void ExtractAllText(string pdfSourcePath)
         {
@@ -184,7 +88,7 @@ namespace LegalMindOCR
         private static void ProcessFiles(string pdfSourcePath)
         {
             string[] fileEntries = Directory.GetFiles(pdfSourcePath);
-            IronOcr.Installation.LicenseKey = "IRONOCR.JOSEPHNYIRENDA.11818-8A92956B58-A3YQV6OYCEAUP-BGODVHZDDFXL-Q5BQW4SBS5KN-7LZKNLVC3CZ2-D3FGY3AEI4PK-MJOQXG-TQ3RJ2UDWFKEEA-DEPLOYMENT.TRIAL-XZZJTS.TRIAL.EXPIRES.12.FEB.2022";
+            IronOcr.Installation.LicenseKey = "vvvxxxxzzzz";
             var Ocr = new IronTesseract();
             foreach (var file in fileEntries)
             {
@@ -194,7 +98,6 @@ namespace LegalMindOCR
                     {
                         input.AddPdf(file);
                         var Result = Ocr.Read(input);
-                        InsertJudgement(file, Result.Text);
                     }
                     catch (Exception e)
                     {
