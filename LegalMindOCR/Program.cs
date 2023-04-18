@@ -1,5 +1,9 @@
-﻿ using IronOcr;
+﻿using com.sun.tools.javac.util;
+using IronOcr;
 using IronPdf;
+using LegalMindPersistence.db;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -7,8 +11,6 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Text.Json;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace LegalMindOCR
 {
@@ -23,7 +25,8 @@ namespace LegalMindOCR
 
         private static void ProcessPrincipleAct()
         {
-            string[] fileEntries = Directory.GetFiles(@"C:\Sandbox\legalminds\pdfs\", "*.html");
+            IList<BsonDocument> docs = new List<BsonDocument>();
+            string[] fileEntries = Directory.GetFiles(@"C:\Users\JoeNyirenda\Documents\Laws Zambia\", "*.html");
             foreach (var f in fileEntries)
             {
                 MainActGenerator actGenerator = new MainActGenerator(f);
@@ -46,11 +49,10 @@ namespace LegalMindOCR
 
                 var json = JsonConvert.SerializeObject(act);
                 // Console.WriteLine(json);
-                using (StreamWriter writer = File.CreateText(f.Replace("html", "json")))
-                {
-                    writer.Write(json);
-                }
+                var document = BsonSerializer.Deserialize<BsonDocument>(json);
+                docs.Add(document);          
             }
+            DbFacade.SaveMany(docs);
         }
 
         static void Main()

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace LegalMindPersistence.db
 {
-    internal class DbFacade
+    public class DbFacade
     {
         private static MongoClient dbClient;
         private static IMongoCollection<BsonDocument> collection;
