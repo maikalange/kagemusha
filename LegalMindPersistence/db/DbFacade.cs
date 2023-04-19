@@ -2,6 +2,7 @@
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LegalMindPersistence.db
 {
@@ -18,8 +19,10 @@ namespace LegalMindPersistence.db
         public static void SaveMany(IEnumerable<BsonDocument> documents)
         {
             IMongoCollection<BsonDocument> collection = GetCollection();
-
-            collection.InsertMany(documents);
+            if (documents.Count() > 0)
+            {
+                collection.InsertMany(documents);
+            }
         }
 
         private static IMongoCollection<BsonDocument> GetCollection()

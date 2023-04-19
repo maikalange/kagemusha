@@ -26,7 +26,7 @@ namespace LegalMindOCR
         private static void ProcessPrincipleAct()
         {
             IList<BsonDocument> docs = new List<BsonDocument>();
-            string[] fileEntries = Directory.GetFiles(Environment.GetEnvironmentVariable(""), "*.html");
+            string[] fileEntries = Directory.GetFiles(Environment.GetEnvironmentVariable("gradedActs.A"), "*.html");
             foreach (var f in fileEntries)
             {
                 MainActGenerator actGenerator = new MainActGenerator(f);
@@ -60,6 +60,7 @@ namespace LegalMindOCR
             ProcessPrincipleAct();            
             Console.ReadKey();
         }
+
 
         private static void ExtractAllText(string pdfSourcePath)
         {
